@@ -11,16 +11,21 @@ router.get('/', async (request, response) => {
 })
 // Add catalog
 router.post('/', async (request, response) => {
-  const catalog = await loadPostCollection();
-  await catalog.insertOne({
-    name: request.body.name,
-    description: request.body.description,
-    price: request.body.price,
-    count: request.body.count,
-    image: request.body.image,
-    createdAt: new Date()
-  });
-  response.status(201).send({ sucess: true });
+  try {
+    const catalog = await loadPostCollection();
+    await catalog.insertOne({
+      name: request.body.name,
+      description: request.body.description,
+      price: request.body.price,
+      count: request.body.count,
+      image: request.body.image,
+      createdAt: new Date()
+    });
+    response.status(201).send({ sucess: true });
+  } catch (e) {
+    response.status(500).send({ message: 'Что-то пошло не так, попробуйте снова' });
+  }
+
 })
 // Delete catalog
 router.delete('/:id', async (request, response) => {
