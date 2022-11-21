@@ -1,13 +1,12 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const modelUser = require('../../../models/User');
-const checkAuth = require('../../../utils/checkAuth');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 
 
 
-router.get('/', checkAuth, async (request, response) => {
+router.get('/', async (request, response) => {
   try {
     const user = await modelUser.findById(request.userId)
     if (!user) {

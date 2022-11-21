@@ -12,8 +12,8 @@ const loginValidation = [
   expressValidator.body('password', "Пароль не может содержать меньше 6 символов").isLength({ min: 6 }),
 ];
 const PostCreateValidation = [
-  expressValidator.body('title', 'Поле title не может быть пустым').isLength({ min: 1, max: 100 }).toString,
-  expressValidator.body('text', 'Поле text не может быть пустым').isLength({ min: 1, max: 1000 }).toString,
-  expressValidator.body('imageUrl', "неверная ссылка").optional().toString(),
+  expressValidator.body('title', 'Поле title не может быть пустым').isLength({ min: 1, max: 100 }),
+  expressValidator.body('text', 'Поле text не может быть пустым').isLength({ min: 1, max: 1000 }),
+  expressValidator.body('imageUrl', "неверная ссылка").optional().isLength(),
 ];
 module.exports = { registerValidation, loginValidation, PostCreateValidation };

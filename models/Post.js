@@ -12,7 +12,9 @@ const schema = new Schema({
     ref: 'User',
     required: true
   },
-  imageUrl: {}
+  imageUrl: {
+    type: String,
+  }
 }, {
   timestamps: true,
 

@@ -4,8 +4,8 @@
   "description": "nuxt3 and express",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "nodemon server/index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "Alexandr Smirnov",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.11.0",
     "mongoose": "^6.7.2",
+    "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.20"
   }
 }
