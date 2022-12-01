@@ -17,15 +17,15 @@ app.use(express.json());
 app.use(cors());
 
 // Хранилище картинок
-const storage = multer.diskStorage({
-  destination: (_, __, callback) => {
-    callback(null, './images')
-  },
-  filename: (_, file, callback) => {
-    callback(null, file.originalname)
-  },
-});
-const upload = multer({ storage })
+// const storage = multer.diskStorage({
+//   destination: (_, __, callback) => {
+//     callback(null, './images')
+//   },
+//   filename: (_, file, callback) => {
+//     callback(null, file.originalname)
+//   },
+// });
+// const upload = multer({ storage })
 
 // ---- Подключение роутов
 const posts = require('./routes/api/posts');
@@ -43,12 +43,12 @@ app.use('/api/users/registration', registration);
 app.use('/api/catalog/post', post);
 // Разобраться с картинкой get запрос
 app.use('/images', express.static('./images'));
-app.use('/images', upload.single('image'), (request, response) => {
-  response.status(200).json({
-    url: `/images/${request.file.originalname}`,
-    message: "Файл упешно загружен"
-  })
-});
+// app.use('/images', upload.single('image'), (request, response) => {
+//   response.status(200).json({
+//     url: `/images/${request.file.originalname}`,
+//     message: "Файл упешно загружен"
+//   })
+// });
 
 // ------
 

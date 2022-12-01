@@ -14,6 +14,6 @@ const loginValidation = [
 const PostCreateValidation = [
   expressValidator.body('title', 'Поле title не может быть пустым').isLength({ min: 1, max: 100 }),
   expressValidator.body('text', 'Поле text не может быть пустым').isLength({ min: 1, max: 1000 }),
-  expressValidator.body('imageUrl', "неверная ссылка").optional().isLength(),
+  expressValidator.body('image', "неверная ссылка").optional().isLength(),
 ];
 module.exports = { registerValidation, loginValidation, PostCreateValidation };

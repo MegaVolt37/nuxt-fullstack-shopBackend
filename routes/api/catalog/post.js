@@ -3,13 +3,43 @@ const checkAuth = require('../../../utils/checkAuth');
 const { PostCreateValidation } = require('../../../validations/validation');
 const modelPost = require('../../../models/Post');
 const router = express.Router();
+const multer = require('multer')
 
-router.post('/', checkAuth, PostCreateValidation, async (request, response) => {
+
+const storage = multer.diskStorage({
+  destination: (_, __, callback) => {
+    callback(null, './images')
+  },
+  filename: (_, file, callback) => {
+    callback(null, Date.now() + '_' + file.originalname)
+  },
+});
+
+const fileFilter = (req, file, callback) => {
+  // reject 
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    callback(null, true);
+  } else {
+    callback(null, false);
+  }
+
+
+}
+
+const upload = multer({
+  storage, limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter
+})
+
+
+router.post('/', checkAuth, PostCreateValidation, upload.single('image'), async (request, response) => {
   try {
     const doc = new modelPost({
       title: request.body.title,
       text: request.body.text,
-      imageUrl: request.body.imageUrl,
+      image: request.protocol + '://' + request.get('host') + '/' + request.file.path,
       author: request.userId
     });
     const post = await doc.save();
@@ -91,7 +121,7 @@ router.patch('/:id', checkAuth, async (request, response) => {
     }, {
       title: request.body.title,
       text: request.body.text,
-      imageUrl: request.body.imageUrl,
+      image: request.file.path,
       author: request.userId
     })
     response.json({
