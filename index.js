@@ -34,6 +34,7 @@ const login = require('./routes/api/users/login');
 const me = require('./routes/api/users/me');
 const registration = require('./routes/api/users/registration');
 const post = require('./routes/api/catalog/post');
+const product = require('./routes/api/catalog/product');
 
 app.use('/api/posts', posts);
 app.use('/api/catalog', catalog);
@@ -41,8 +42,10 @@ app.use('/api/users/login', login);
 app.use('/api/users/me', checkAuth, me);
 app.use('/api/users/registration', registration);
 app.use('/api/catalog/post', post);
+app.use('/api/catalog/product', product);
 // Разобраться с картинкой get запрос
 app.use('/images', express.static('./images'));
+app.use('/images/products', express.static('./images/products/'));
 // app.use('/images', upload.single('image'), (request, response) => {
 //   response.status(200).json({
 //     url: `/images/${request.file.originalname}`,

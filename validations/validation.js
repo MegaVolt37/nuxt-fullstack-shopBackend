@@ -16,4 +16,13 @@ const PostCreateValidation = [
   expressValidator.body('text', 'Поле text не может быть пустым').isLength({ min: 1, max: 1000 }),
   expressValidator.body('image', "неверная ссылка").optional().isLength(),
 ];
-module.exports = { registerValidation, loginValidation, PostCreateValidation };
+const ProductCreateValidation = [
+  expressValidator.body('name', 'Поле name не может быть пустым').isLength({ min: 1, max: 100 }),
+  expressValidator.body('price', 'Поле price не может быть пустым').isLength({ min: 1, max: 1000 }),
+  expressValidator.body('article', 'Поле article не может быть пустым').isLength({ min: 1, max: 1000 }),
+  expressValidator.body('brand', 'Поле brand не может быть пустым').isLength({ min: 1, max: 1000 }),
+  expressValidator.body('country', 'Поле country не может быть пустым').isLength({ min: 1, max: 1000 }),
+  expressValidator.body('weight', 'Поле weight не может быть пустым').isLength({ min: 1, max: 1000 }),
+  expressValidator.body('image', "неверная ссылка").optional().isLength(),
+];
+module.exports = { registerValidation, loginValidation, PostCreateValidation,ProductCreateValidation };

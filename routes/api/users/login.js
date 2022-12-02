@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.post('/', loginValidation, async (request, response) => {
   try {
-    console.log(request.body)
     const user = await modelUser.findOne({ email: request.body.email });
     if (!user) {
       return response.status(401).json({
