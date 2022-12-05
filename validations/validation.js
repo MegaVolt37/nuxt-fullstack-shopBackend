@@ -25,4 +25,8 @@ const ProductCreateValidation = [
   expressValidator.body('weight', 'Поле weight не может быть пустым').isLength({ min: 1, max: 1000 }),
   expressValidator.body('image', "неверная ссылка").optional().isLength(),
 ];
-module.exports = { registerValidation, loginValidation, PostCreateValidation,ProductCreateValidation };
+const CartCreateValidation = [
+  expressValidator.body('count', 'Поле count не может быть пустым').isLength({ min: 1, max: 100 }),
+
+];
+module.exports = { registerValidation, loginValidation, PostCreateValidation, ProductCreateValidation, CartCreateValidation };

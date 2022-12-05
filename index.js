@@ -35,6 +35,7 @@ const me = require('./routes/api/users/me');
 const registration = require('./routes/api/users/registration');
 const post = require('./routes/api/catalog/post');
 const product = require('./routes/api/catalog/product');
+const cart = require('./routes/api/cart');
 
 app.use('/api/posts', posts);
 app.use('/api/catalog', catalog);
@@ -43,6 +44,7 @@ app.use('/api/users/me', checkAuth, me);
 app.use('/api/users/registration', registration);
 app.use('/api/catalog/post', post);
 app.use('/api/catalog/product', product);
+app.use('/api/cart', cart);
 // Разобраться с картинкой get запрос
 app.use('/images', express.static('./images'));
 app.use('/images/products', express.static('./images/products/'));

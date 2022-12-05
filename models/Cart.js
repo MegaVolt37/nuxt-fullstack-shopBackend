@@ -6,11 +6,7 @@ const schema = new Schema({
   discount: { type: Number },
   stock: { type: Number },
   countStorage: { type: Number },
-  article: { type: String, required: true, unique: true },
-  category: { type: String, required: true },
-  brand: { type: String, required: true },
-  country: { type: String, required: true },
-  weight: { type: String, required: true },
+  countCart: { type: Number },
   image: {
     type: String,
     required: true
@@ -20,8 +16,5 @@ const schema = new Schema({
     ref: 'User',
     required: true
   }
-}, {
-  timestamps: true,
-
 })
-module.exports = mongoose.model('Product', schema)
+module.exports = mongoose.model('Cart', schema)
