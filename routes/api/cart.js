@@ -36,7 +36,8 @@ router.post('/add/:id', checkAuth, CartCreateValidation, async (request, respons
   }
 
 })
-router.get('/', async (request, response) => {
+// Получение всех товаров в корзине
+router.get('/', checkAuth, async (request, response) => {
   try {
     const cart = await modelCart.find().exec();
     response.json(cart)
@@ -45,24 +46,35 @@ router.get('/', async (request, response) => {
     response.status(500).json(error)
   }
 })
-router.get('/news', async (request, response) => {
+// Количество товаров в корзине
+router.get('/count', checkAuth, async (request, response) => {
   try {
-    const products = await modelProduct.find().sort({ createdAt: -1 }).limit(4).exec();
-    response.json(products)
+    const cart = await modelCart.find().count();
+    console.log(cart)
+    response.json(cart)
   } catch (error) {
     console.log(error)
     response.status(500).json(error)
   }
 })
-router.get('/stock', async (request, response) => {
-  try {
-    const products = await modelProduct.find({ stock: { $exists: true } }).sort({ createdAt: -1 }).limit(4);
-    response.json(products)
-  } catch (error) {
-    console.log(error)
-    response.status(500).json(error)
-  }
-})
+// router.get('/news', async (request, response) => {
+//   try {
+//     const products = await modelProduct.find().sort({ createdAt: -1 }).limit(4).exec();
+//     response.json(products)
+//   } catch (error) {
+//     console.log(error)
+//     response.status(500).json(error)
+//   }
+// })
+// router.get('/stock', async (request, response) => {
+//   try {
+//     const products = await modelProduct.find({ stock: { $exists: true } }).sort({ createdAt: -1 }).limit(4);
+//     response.json(products)
+//   } catch (error) {
+//     console.log(error)
+//     response.status(500).json(error)
+//   }
+// })
 router.get('/:id', async (request, response) => {
   try {
     const productId = await modelProduct.findById(request.params.id)
@@ -79,9 +91,9 @@ router.get('/:id', async (request, response) => {
 })
 router.delete('/:id', checkAuth, async (request, response) => {
   try {
-    const postId = request.params.id
-    modelProduct.findOneAndDelete({
-      _id: postId
+    const productId = request.params.id
+    modelCart.findOneAndDelete({
+      _id: productId
     }, (err, doc) => {
       if (err) {
         console.log(err)
