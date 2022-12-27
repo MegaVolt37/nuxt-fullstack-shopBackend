@@ -63,8 +63,12 @@ router.post('/', checkAuth, ProductCreateValidation, upload.single('image'), asy
 })
 router.get('/', async (request, response) => {
   try {
+    
     if (Object.keys(request.query).length) {
-      const productsFilter = await modelProduct.find(request.query);
+      // console.log(request.query, Object.values(request.query))
+      // const key = Object.keys(request.query);
+      const productsFilter = await modelProduct.find({'name': {'$regex': `${Object.values(request.query)}`}});
+      console.log(productsFilter)
       response.json(productsFilter)
     } else {
       const products = await modelProduct.find().exec();

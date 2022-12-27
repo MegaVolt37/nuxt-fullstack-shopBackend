@@ -10,7 +10,6 @@ const router = express.Router();
 router.post('/add/:id', checkAuth, CartCreateValidation, async (request, response) => {
   try {
     const product = await modelProduct.findById(request.params.id)
-    console.log(product)
     const doc = new modelCart({
       name: product.name,
       price: product.price,
@@ -50,40 +49,7 @@ router.get('/', checkAuth, async (request, response) => {
 router.get('/count', checkAuth, async (request, response) => {
   try {
     const cart = await modelCart.find().count();
-    console.log(cart)
     response.json(cart)
-  } catch (error) {
-    console.log(error)
-    response.status(500).json(error)
-  }
-})
-// router.get('/news', async (request, response) => {
-//   try {
-//     const products = await modelProduct.find().sort({ createdAt: -1 }).limit(4).exec();
-//     response.json(products)
-//   } catch (error) {
-//     console.log(error)
-//     response.status(500).json(error)
-//   }
-// })
-// router.get('/stock', async (request, response) => {
-//   try {
-//     const products = await modelProduct.find({ stock: { $exists: true } }).sort({ createdAt: -1 }).limit(4);
-//     response.json(products)
-//   } catch (error) {
-//     console.log(error)
-//     response.status(500).json(error)
-//   }
-// })
-router.get('/:id', async (request, response) => {
-  try {
-    const productId = await modelProduct.findById(request.params.id)
-    if (!productId) {
-      return response.status(400).send({
-        message: "Товар не найден"
-      })
-    }
-    response.json(productId)
   } catch (error) {
     console.log(error)
     response.status(500).json(error)
@@ -113,20 +79,25 @@ router.delete('/:id', checkAuth, async (request, response) => {
     response.status(500).json(error)
   }
 })
-router.patch('/:id', checkAuth, async (request, response) => {
+// Нажатие на кнопку оформить заказ на фронте => переход в стадию оформления заказа
+router.post('/order', checkAuth, async (request, response) => { 
   try {
-    const postId = request.params.id
-    await modelProduct.updateOne({
-      _id: postId
-    }, {
-      title: request.body.title,
-      text: request.body.text,
-      image: request.file.path,
-      author: request.userId
-    })
-    response.json({
-      success: true
-    })
+    let arrId = [];
+    request.body.forEach(element => {
+      arrId.push(element.id)
+    });
+    const resDel = await modelCart.deleteMany({ _id: { $in: arrId } })
+    if (resDel.deletedCount !== arrId.length) {
+      return response.status(404).json({
+        message: "Некоторые товары не были удалены"
+      })
+    } else if (!resDel.deletedCount) {
+      return response.status(500).json(resDel)
+    } else {
+      response.json({
+        success: true
+      })
+    }
   } catch (error) {
     console.log(error)
     response.status(500).json(error)
