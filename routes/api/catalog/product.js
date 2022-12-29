@@ -2,6 +2,7 @@ const express = require('express');
 const checkAuth = require('../../../utils/checkAuth');
 const { ProductCreateValidation } = require('../../../validations/validation');
 const modelProduct = require('../../../models/Product');
+const modelUser = require('../../../models/User');
 const router = express.Router();
 const multer = require('multer')
 
@@ -63,12 +64,8 @@ router.post('/', checkAuth, ProductCreateValidation, upload.single('image'), asy
 })
 router.get('/', async (request, response) => {
   try {
-    
     if (Object.keys(request.query).length) {
-      // console.log(request.query, Object.values(request.query))
-      // const key = Object.keys(request.query);
-      const productsFilter = await modelProduct.find({'name': {'$regex': `${Object.values(request.query)}`}});
-      console.log(productsFilter)
+      const productsFilter = await modelProduct.find({ 'name': { '$regex': `${Object.values(request.query)}` } });
       response.json(productsFilter)
     } else {
       const products = await modelProduct.find().exec();
@@ -100,11 +97,13 @@ router.get('/stock', async (request, response) => {
 router.get('/:id', async (request, response) => {
   try {
     const productId = await modelProduct.findById(request.params.id)
+    const user = await modelUser.findById(productId.supplier)
     if (!productId) {
       return response.status(400).send({
         message: "Товар не найден"
       })
     }
+    productId._doc.supplier = { id: productId._doc.supplier, fullName: user.fullName }
     response.json(productId)
   } catch (error) {
     console.log(error)
@@ -137,15 +136,38 @@ router.delete('/:id', checkAuth, async (request, response) => {
 })
 router.patch('/:id', checkAuth, async (request, response) => {
   try {
+    let resultPrice = ""
+    let resultDiscount = ""
     const postId = request.params.id
+    if (request.body.stock) {
+      const product = await modelProduct.findById(request.params.id)
+      resultPrice = request.body.stock ? (product.price - (product.price * (request.body.stock / 100))).toFixed(2) : null
+    } else {
+      const product = await modelProduct.findById(request.params.id)
+      resultPrice = product.stock ? (product.price - (product.price * (product.stock / 100))).toFixed(2) : null
+    }
+    if (request.body.price) {
+      resultDiscount = (request.body.price - (request.body.price * 0.05)).toFixed(2)
+    } else {
+      const product = await modelProduct.findById(request.params.id)
+      resultDiscount = (product.price - (product.price * 0.05)).toFixed(2)
+    }
     await modelProduct.updateOne({
       _id: postId
     }, {
-      title: request.body.title,
-      text: request.body.text,
-      image: request.file.path,
-      author: request.userId
+      name: request.body.name,
+      price: request.body.price,
+      priceStock: resultPrice,
+      discount: resultDiscount,
+      article: request.body.article,
+      category: request.body.category,
+      brand: request.body.brand,
+      country: request.body.country,
+      weight: request.body.weight,
+      stock: request.body.stock,
+      countStorage: request.body.countStorage,
     })
+
     response.json({
       success: true
     })
